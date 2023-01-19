@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="kr.board.mapper.LoginMapper">
+  
+
+
+  <insert id="sign" parameterType="kr.board.entity.UsersDTO">
+    insert into cmusers(name,pwd,addr,sex,email,tel)
+    values(#{name},#{pwd},#{addr},#{sex},#{email},#{tel})
+  </insert>
+  
+
+  
+</mapper>

@@ -19,7 +19,6 @@
   <h2>Spring MVC01</h2>
   <div class="panel panel-default">
     <div class="panel-heading">BOARD</div>
-      <span><c:out value="${vo}"/></span>
     <div class="panel-body">
        <table class="table">
           <tr>

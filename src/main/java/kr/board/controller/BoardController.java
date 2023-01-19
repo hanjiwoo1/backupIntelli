@@ -7,6 +7,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Controller
 public class BoardController {    // new BoardController();
 
@@ -16,7 +18,8 @@ public class BoardController {    // new BoardController();
     // HandlerMapping
     @RequestMapping("/boardList.do")
     public String boardList(Model model) {
-        model.addAttribute("list", boardService.getlists());
+        List<Board> list = boardService.getlists();
+        model.addAttribute("list", list);
         return "boardList"; // /WEB-INF/views/boardList.jsp -> forward
     }
 
@@ -34,11 +37,11 @@ public class BoardController {    // new BoardController();
     @GetMapping("/boardContent.do")
     public String boardContent(int idx, Model model) { // ?idx=6
 
-        Board content = boardService.boardContent(idx);
-        model.addAttribute("vo", content);
-        // 조회수 증가
-        //mapper.boardCount(idx);
-        //model.addAttribute("vo", vo); // ${vo.idx}...
+        Board vo = boardService.boardContent(idx);
+        model.addAttribute("vo", vo);
+       //  조회수 증가
+
+
         return "boardContent"; // boardContent.jsp
     }
 
