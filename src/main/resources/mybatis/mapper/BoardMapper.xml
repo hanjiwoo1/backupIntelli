@@ -30,4 +30,27 @@
         where idx = #{idx}
     </update>
 
+    <select id="getListPaging" parameterType="kr.board.entity.SearchBoardVO" resultType="kr.board.entity.Board">
+        select *
+        from (select *
+              from myboard
+                  <if test="sortBycount == '1'">
+                      order by count desc
+                  </if>
+                  <if test="sortBycount == '0'">
+                      order by count asc
+                  </if>
+                  <if test="sortBycount == ''">
+                      order by idx desc
+                  </if>
+             ) as T1
+            limit #{cri.skip},#{cri.amount}
+
+    </select>
+
+    <select id="getTotal" resultType="int">
+        select count(*)
+        from myboard
+    </select>
+
 </mapper>

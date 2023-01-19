@@ -22,3 +22,16 @@ select * from myboard order by idx desc;
 select * from test;
 
 select * from cmusers;
+
+select *
+from (select *
+      from myboard
+      order by idx desc) as T1
+limit 10, 20;
+
+select *
+from (select *
+      from myboard
+      order by count desc
+     ) as T1
+limit 1,10

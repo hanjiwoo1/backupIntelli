@@ -1,5 +1,6 @@
 package kr.board.service.impl;
 
+import kr.board.entity.SearchBoardVO;
 import kr.board.entity.Board;
 import kr.board.mapper.BoardMapper;
 import kr.board.service.BoardService;
@@ -19,6 +20,11 @@ public class BoardServiceImpl implements BoardService {
         List<Board> list = boardMapper.getLists();
 
         return list;
+    }
+
+    @Override
+    public List<Board> getListPaging(SearchBoardVO vo) {
+        return boardMapper.getListPaging(vo);
     }
 
     @Override
@@ -47,6 +53,11 @@ public class BoardServiceImpl implements BoardService {
     public void boardUpdate(Board vo) {
 
         boardMapper.boardUpdate(vo);
+    }
+
+    @Override
+    public int getTotal() {
+        return boardMapper.getTotal();
     }
 
 }

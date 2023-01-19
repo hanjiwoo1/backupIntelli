@@ -1,14 +1,19 @@
 package kr.board.controller;
 
 import kr.board.entity.Board;
+import kr.board.entity.Criteria;
+import kr.board.entity.PageMakerDTO;
+import kr.board.entity.SearchBoardVO;
 import kr.board.service.BoardService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import javax.servlet.http.HttpServletRequest;
 
+@Slf4j
 @Controller
 public class BoardController {    // new BoardController();
 
@@ -16,15 +21,57 @@ public class BoardController {    // new BoardController();
     private BoardService boardService;
 
     // HandlerMapping
-    @RequestMapping("/boardList.do")
-    public String boardList(Model model) {
+    /*@RequestMapping("/boardList.do")
+    public String boardList(Model model, Criteria cri) {
         List<Board> list = boardService.getlists();
         model.addAttribute("list", list);
         return "boardList"; // /WEB-INF/views/boardList.jsp -> forward
+    }*/
+
+    @RequestMapping("/boardList.do")
+    public void boardListGET(HttpServletRequest request, Model model){
+        try{
+            log.info("request {}",request);
+            String sortBycount = "";
+            boolean flag = false;
+            int pageNum = 0;
+            if(request.getParameter("pageNum") != null) flag = true;
+            Criteria cri = null;
+            if(flag){
+                pageNum = Integer.parseInt(request.getParameter("pageNum"));
+                sortBycount = request.getParameter("sortBycount");
+                cri = new Criteria(pageNum, 10);
+
+            }else{
+                cri = new Criteria();
+            }
+            log.info("boardListGET");
+            log.info("cri:::::::::" + cri.toString());
+
+            SearchBoardVO vo = new SearchBoardVO();
+            vo.setCri(cri);
+            vo.setSortBycount(sortBycount);
+            log.info("vo:::::::::::::::::"+vo.toString());
+
+
+            model.addAttribute("list", boardService.getListPaging(vo));
+
+            int total = boardService.getTotal();
+
+            PageMakerDTO pageMake = new PageMakerDTO(cri, total);
+
+            log.info(pageMake.toString());
+
+            model.addAttribute("pageMaker", pageMake);
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     @GetMapping("/boardForm.do")
     public String boardForm() {
+
         return "boardForm"; // /WEB-INF/views/boardForm.jsp -> forward
     }
 
@@ -39,7 +86,6 @@ public class BoardController {    // new BoardController();
 
         Board vo = boardService.boardContent(idx);
         model.addAttribute("vo", vo);
-       //  조회수 증가
 
 
         return "boardContent"; // boardContent.jsp
