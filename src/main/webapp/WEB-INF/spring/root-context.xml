@@ -15,17 +15,27 @@
     </bean>
 	-->
 
-	<bean id="hikariConfig" class="com.zaxxer.hikari.HikariConfig">
-		<property name="driverClassName" value="com.mysql.cj.jdbc.Driver"/>
+	<bean id="hikariConfig" class="org.springframework.jdbc.datasource.SimpleDriverDataSource">
+		<property name="driverClass" value="com.mysql.cj.jdbc.Driver"/>
 		<!--<property name="jdbcUrl" value="jdbc:mysql://localhost:3306/com?serverTimezone=UTC"/>-->
-		<property name="jdbcUrl" value="jdbc:mysql://codemonster.kr:3306/comon_study?serverTimezone=UTC"/>
+		<property name="url" value="jdbc:mysql://codemonster.kr:3306/comon_study?serverTimezone=UTC"/>
 		<property name="username" value="comon_user"/>
 		<property name="password" value="zhemahstmxj!@"/>
 	</bean>
 
-	<bean id="dataSource" class="com.zaxxer.hikari.HikariDataSource" destroy-method="close">
-      <constructor-arg ref="hikariConfig" />
-    </bean>
+	<bean id="dataSource" class="net.sf.log4jdbc.Log4jdbcProxyDataSource">
+		<constructor-arg ref="hikariConfig" />
+		<property name="logFormatter">
+			<bean class="net.sf.log4jdbc.tools.Log4JdbcCustomFormatter">
+				<property name="loggingType" value="MULTI_LINE" />
+				<property name="sqlPrefix" value="SQL : "/>
+			</bean>
+		</property>
+	</bean>
+
+<!--	<bean id="dataSource" class="com.zaxxer.hikari.HikariDataSource" destroy-method="close">-->
+<!--      <constructor-arg ref="hikariConfig" />-->
+<!--    </bean>-->
 
 	<!-- 마이바티스 지원을 위한 빈(mybatis-spring-2.x.jar 등록) -->
 	<!-- 1]SqlSessionFactory -->
