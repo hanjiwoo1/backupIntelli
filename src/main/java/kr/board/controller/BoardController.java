@@ -29,29 +29,38 @@ public class BoardController {    // new BoardController();
     }*/
 
     @RequestMapping("/boardList.do")
-    public void boardListGET(HttpServletRequest request, Model model){
-        try{
-            log.info("request {}",request);
+    public void boardListGET(HttpServletRequest request, Model model) {
+        log.info("sortByidx :::::::::::::"+request.getParameter("sortByidx"));
+        log.info("sortBycount :::::::::::::"+request.getParameter("sortBycount"));
+        try {
+            log.info("request {}", request);
             String sortBycount = "";
+            String sortByidx = "";
             boolean flag = false;
             int pageNum = 0;
-            if(request.getParameter("pageNum") != null) flag = true;
+            if (request.getParameter("pageNum") != null) flag = true;
             Criteria cri = null;
-            if(flag){
-                pageNum = Integer.parseInt(request.getParameter("pageNum"));
+            if (flag) {
+                if(request.getParameter("pageNum") == null || request.getParameter("pageNum") == "" ){
+                    pageNum = 1;
+                } else{
+                    pageNum = Integer.parseInt(request.getParameter("pageNum"));
+                }
                 sortBycount = request.getParameter("sortBycount");
+                sortByidx = request.getParameter("sortByidx");
+                log.info("REALSORTBYIDX:::::::::::" + sortByidx);
                 cri = new Criteria(pageNum, 10);
 
-            }else{
+            } else {
                 cri = new Criteria();
             }
-            log.info("boardListGET");
-            log.info("cri:::::::::" + cri.toString());
+//            log.info("cri:::::::::" + cri.toString());
 
             SearchBoardVO vo = new SearchBoardVO();
             vo.setCri(cri);
             vo.setSortBycount(sortBycount);
-            log.info("vo:::::::::::::::::"+vo.toString());
+            vo.setSortByidx(sortByidx);
+            log.info("vo:::::::::::::::::" + vo.toString());
 
 
             model.addAttribute("list", boardService.getListPaging(vo));
@@ -64,7 +73,7 @@ public class BoardController {    // new BoardController();
 
             model.addAttribute("pageMaker", pageMake);
 
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

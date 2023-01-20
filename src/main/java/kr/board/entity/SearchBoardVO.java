@@ -10,7 +10,7 @@ public class SearchBoardVO {
 
     private Criteria cri;
 
-    private int sortByidx;
+    private String sortByidx;
 
     private String sortBycount;
 

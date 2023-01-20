@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="kr.board.mapper.BoardMapper">
-  
+
   <select id="getLists" resultType="kr.board.entity.Board">
     select * from myboard order by idx desc
   </select>
@@ -10,15 +10,15 @@
     insert into myboard(title,content,writer)
     values(#{title},#{content},#{writer})
   </insert>
-  
+
   <select id="boardContent" resultType="kr.board.entity.Board">
      select * from myboard where idx=#{idx}
   </select>
-  
+
   <delete id="boardDelete" parameterType="int">
      delete from myboard where idx=#{idx}
   </delete>
-  
+
   <update id="boardUpdate" parameterType="kr.board.entity.Board">
      update myboard set title=#{title}, content=#{content}
      where idx=#{idx}
@@ -33,18 +33,61 @@
     <select id="getListPaging" parameterType="kr.board.entity.SearchBoardVO" resultType="kr.board.entity.Board">
         select *
         from (select *
-              from myboard
-                  <if test='sortBycount == "1"'>
-                      order by count desc
-                  </if>
-                  <if test='sortBycount == "0"'>
-                      order by count asc
-                  </if>
-                  <if test='sortBycount == ""'>
-                      order by idx desc
-                  </if>
-             ) as T1
-            limit #{cri.skip},#{cri.amount}
+        from myboard
+        <if test='sortBycount == "0" or sortBycount == "1"'>
+            <choose>
+                <when test='sortBycount == "1"'>
+                    <if test='sortByidx == "1"'>
+                        order by count desc, idx desc
+                    </if>
+                    <if test='sortByidx == "0"'>
+                        order by count desc, idx asc
+                    </if>
+                    <if test='sortByidx == ""'>
+                        order by count desc
+                    </if>
+                </when>
+                <when test='sortBycount == "0"'>
+                    <if test='sortByidx == "1"'>
+                        order by count asc, idx desc
+                    </if>
+                    <if test='sortByidx == "0"'>
+                        order by count asc, idx asc
+                    </if>
+                    <if test='sortByidx == ""'>
+                        order by count asc
+                    </if>
+                </when>
+            </choose>
+        </if>
+        <if test='sortByidx == "0" or sortByidx =="1"'>
+            <choose>
+                <when test='sortByidx == "1"'>
+                    <if test='sortBycount == "1"'>
+                        order by count desc, idx desc
+                    </if>
+                    <if test='sortBycount == "0"'>
+                        order by count asc, idx desc
+                    </if>
+                    <if test='sortBycount == ""'>
+                        order by idx desc
+                    </if>
+                </when>
+                <when test='sortByidx == "0"'>
+                    <if test='sortBycount == "1"'>
+                        order by count desc, idx asc
+                    </if>
+                    <if test='sortBycount == "0"'>
+                        order by count asc, idx asc
+                    </if>
+                    <if test='sortBycount == ""'>
+                        order by idx asc
+                    </if>
+                </when>
+            </choose>
+        </if>
+        ) as T1
+        limit #{cri.skip},#{cri.amount}
 
     </select>
 
@@ -52,5 +95,7 @@
         select count(*)
         from myboard
     </select>
+
+
 
 </mapper>
