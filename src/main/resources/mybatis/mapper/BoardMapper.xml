@@ -34,13 +34,13 @@
         select *
         from (select *
               from myboard
-                  <if test="sortBycount == '1'">
+                  <if test='sortBycount == "1"'>
                       order by count desc
                   </if>
-                  <if test="sortBycount == '0'">
+                  <if test='sortBycount == "0"'>
                       order by count asc
                   </if>
-                  <if test="sortBycount == ''">
+                  <if test='sortBycount == ""'>
                       order by idx desc
                   </if>
              ) as T1
